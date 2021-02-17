@@ -3,7 +3,7 @@ const router  = express.Router();
 
 /* GET home page */
 router.get('/', (req, res, next) => {
-  console.log(req.session.ritual)
+  console.log("Sesión",req.session.currentUser)
   res.render('index');
 });
 

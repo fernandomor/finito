@@ -30,7 +30,7 @@ router.post("/login" , async (req,res,next)=>{
     const match = await bcrypt.compareSync(password , userDB.passwordHash)
     console.log(match)
     if(match){
-        res.redirect("/login")
+        res.redirect("/daily")
     }else{
         res.render("user/login",{ errorMessage : "Contraseña incorrecta"})
     }  
@@ -41,24 +41,25 @@ router.post("/login" , async (req,res,next)=>{
 
 router.get("/signup" ,async (req,res,next)=>{
   const rituales = await InitRitu.find({})
-  res.render('user/registro' ,{userInSession: req.session.currentUser,rituales})
+  if(!req.session.currentUser){
+    res.render('user/registro' ,{rituales})
+  }else{
+    res.redirect("/daily")
+  }
 })
 
 router.post("/signup" , async (req,res,next)=>{
-  const {name, edad, email, password} = req.body
+  const {name, edad, email, password,interes} = req.body
   console.log(name,edad,email,password)
-  try{
-      const genResult = await bcrypt.genSalt(saltRounds)
-      const passwordHash = await bcrypt.hash(password,genResult)
-      const newUser = await User.create({name, edad, email, passwordHash})
-      console.log(`The user ${newUser} was created`)
-      req.session.currentUser = newUser
-      console.log("esta es la cookie",req.session.currentUser)
-      res.redirect("/login")
-  }
-  catch(error){
-      console.log(error)
-  }
+  //Revisar que el usuario sea unico
+  const genResult = await bcrypt.genSalt(saltRounds)
+  const passwordHash = await bcrypt.hash(password,genResult)
+  const newUser = await User.create({name, edad, email, passwordHash ,interes})
+  console.log(`The user ${newUser} was created`)
+  req.session.currentUser = newUser
+  console.log("esta es la cookie",req.session.currentUser)
+  res.redirect("/select-rituals")
+  
 })
   
 router.get("/logout" , async (req,res,next)=>{

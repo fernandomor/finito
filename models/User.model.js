@@ -19,9 +19,7 @@ passwordHash:{
     type: String,
     required: [true,"Password is required"]
 },
-interes:{
-    type: String,
-},
+interes:[String],
 rituales:[{ type: Schema.Types.ObjectId, ref: 'Rituales' }]
 });
 
