@@ -7,7 +7,7 @@ const saltRounds = 10
 
 
 router.get("/login" ,(req,res,next)=>{
-  console.log(req.session.currentUser)
+  console.log("en login",req.session.currentUser)
   if(!req.session.currentUser){
     res.render("user/login")
   }else{
@@ -28,9 +28,11 @@ router.post("/login" , async (req,res,next)=>{
         res.render("user/login",{errorMessage: "Este usuario no existe"})
     }
     const match = await bcrypt.compareSync(password , userDB.passwordHash)
-    console.log(match)
+    console.log("Ver si coincide la pswd",match)
     if(match){
-        res.redirect("/daily")
+      console.log("deberia entrar")
+      req.session.currentUser = userDB
+      res.redirect("/daily")
     }else{
         res.render("user/login",{ errorMessage : "Contraseña incorrecta"})
     }  
@@ -50,7 +52,7 @@ router.get("/signup" ,async (req,res,next)=>{
 
 router.post("/signup" , async (req,res,next)=>{
   const {name, edad, email, password,interes} = req.body
-  console.log(name,edad,email,password)
+  console.log("en signup",name,edad,email,password)
   //Revisar que el usuario sea unico
   const genResult = await bcrypt.genSalt(saltRounds)
   const passwordHash = await bcrypt.hash(password,genResult)
@@ -58,8 +60,8 @@ router.post("/signup" , async (req,res,next)=>{
   console.log(`The user ${newUser} was created`)
   req.session.currentUser = newUser
   console.log("esta es la cookie",req.session.currentUser)
+
   res.redirect("/select-rituals")
-  
 })
   
 router.get("/logout" , async (req,res,next)=>{

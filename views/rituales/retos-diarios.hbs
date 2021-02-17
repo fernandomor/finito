@@ -1,5 +1,25 @@
-<div class="bg-gray-100 w-full flex-none">
-  <div class="w-full flex-none -ml-full transform shadow-lg bg-gradient-to-br from-fuchsia-500 to-purple-600">
-    <h1 class="text-7xl	">Aqui van los retos diarios</h1>
+<div class="py-4 px-8 max-w-md mx-auto space-y-0 ">
+<h1 class="text-3xl font-extrabold text-gray-900">Hola {{name}}</h1>
+<p class="mt-1 text-lg text-gray-500">Estos son tus retos del día</p>
+</div>
+
+
+{{#each arrayFiltrado}}
+<div class="mt-5 py-4 px-8 max-w-sm mx-auto bg-white rounded-xl shadow-md flex space-y-0 space-x-6">
+  <img class="block h-20 w-20 rounded-full" src="https://images.unsplash.com/photo-1613520054193-d09b13a03aab?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" >
+  <div class="text-left space-y-2 sm:text-left">
+    <div class="space-y-0.5">
+      <p class="text-lg text-black font-bold">
+        {{ritualName}}
+      </p>
+    </div>
+    <button class="px-4 py-1 text-sm text-blue-600 font-semibold rounded-md border border-blue-200 hover:text-white hover:bg-blue-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"><a href="/editar/{{_id}}">Editar dias</a></button>
+    <button class="px-4 py-1 text-sm text-green-600 font-semibold rounded-md border border-green-200 hover:text-white hover:bg-green-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"><a href="/iniciar/{{_id}}">Comenzar</a></button>
   </div>
 </div>
+{{/each}}
+
+
+    
+
+

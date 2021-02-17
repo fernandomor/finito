@@ -20,7 +20,7 @@ passwordHash:{
     required: [true,"Password is required"]
 },
 interes:[String],
-rituales:[{ type: Schema.Types.ObjectId, ref: 'Rituales' }]
+rituales:[{ type: Schema.Types.ObjectId, ref: 'ritual' }]
 });
 
 module.exports = model("user",userSchema) 

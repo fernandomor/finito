@@ -5,6 +5,9 @@ const Rituales = require('../models/Rituales.model.js')
 const Record = require('../models/Record.model.js')
 const InitRitu = require('../models/Init.model.js')
 const dias = ["Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"]
+let today = new Date()
+let indiceDia = today.getDay()
+
 
 
 router.get("/select-rituals" , async (req,res,next)=>{
@@ -30,15 +33,36 @@ router.post("/select-rituals" , async (req,res,next)=>{
       ritualesSelect
    })
   }
-
+  // aqui hay un error cuando vuelver a seleccionar un ritual - no se sobreescribe, se hace uno nuevo y traera problemas
+  //hay que prohibir que pueda volver a picarle o hacer una validación de editar :(
   res.render("rituales/select-rituales",{ritualesSelect} )
 })
 
 
-router.get("/daily" ,(req,res,next)=>{
+router.get("/daily" , async (req,res,next)=>{
+  const {name , email} = req.session.currentUser
+  console.log("en daily",req.session.currentUser)
+  const userDB = await User.find({email}).populate("rituales")
+  const ritualesIdDb = userDB[0].rituales //los rituales relacionados al user
+  let arrayFiltrado = []
+  ritualesIdDb.forEach(e=>{
+    if(e.dias.includes(dias[indiceDia])){
+      arrayFiltrado.push(e)
+    }
+  })
+  
+  console.log("aqui las pruebas",arrayFiltrado)
+  if(!req.session.currentUser){
+    res.redirect("/login")
+  }else{ 
+    
+    
+    res.render("rituales/retos-diarios",{name,arrayFiltrado})
+  }
+
   //Logica de los dias 
   //Cuales aparecen los que selecciono- boton de iniciar y de terminar se postea en el record
-  res.render("rituales/retos-diarios")
+  
 })
 
 
