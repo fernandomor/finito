@@ -1,14 +1,15 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const InitRitu = require('../models/Init.model.js');
- 
-const DB_NAME = 'finito';
- 
-mongoose.connect(`mongodb://localhost/${DB_NAME}`, {
-  useCreateIndex: true,
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://finito:finito@cluster0.ugtzm.mongodb.net/finito"
 
+mongoose
+.connect(MONGODB_URI, {
+useCreateIndex: true,
+useNewUrlParser: true,
+useUnifiedTopology: true
+})
+.then(x => console.log(`Connected to Mongo ONLINE! Database name: “${x.connections[0].name}“`))
+.catch(err => console.error("Error connecting to mongo", err));
 
 const ritualesInit = [
   {nombreRitual:"leer",img:"https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1934&q=80", pregunta:"Pon el máximo de páginas diarias que deseas leer"},
