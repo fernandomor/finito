@@ -5,8 +5,14 @@ const Rituales = require('../models/Rituales.model.js')
 const Record = require('../models/Record.model.js')
 const InitRitu = require('../models/Init.model.js')
 const dias = ["Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"]
-let today = new Date()
-let indiceDia = today.getDay()
+
+function formatAMPM(d) {
+
+    minutes = d.getMinutes().toString().length == 1 ? '0'+d.getMinutes() : d.getMinutes(),
+    hours = d.getHours().toString().length == 1 ? '0'+d.getHours() : d.getHours(),
+    ampm = d.getHours() >= 12 ? 'pm' : 'am'    
+    return hours+':'+minutes+ampm;
+}
 
 
 
@@ -40,6 +46,9 @@ router.post("/select-rituals" , async (req,res,next)=>{
 
 
 router.get("/daily" , async (req,res,next)=>{
+  let today = new Date()
+  let indiceDia = today.getDay()
+  
   const {name , email} = req.session.currentUser
   console.log("en daily",req.session.currentUser)
   const userDB = await User.find({email}).populate("rituales")
@@ -55,14 +64,9 @@ router.get("/daily" , async (req,res,next)=>{
   if(!req.session.currentUser){
     res.redirect("/login")
   }else{ 
-    
-    
     res.render("rituales/retos-diarios",{name,arrayFiltrado})
   }
-
-  //Logica de los dias 
-  //Cuales aparecen los que selecciono- boton de iniciar y de terminar se postea en el record
-  
+  //si el arrayFiltrado esta vacio poner que es dia de descanso 
 })
 
 
@@ -92,6 +96,29 @@ router.post("/newRitual/:name" , async (req,res,next)=>{
   }  
 })
 
+router.get("/editar/:id" ,(req,res,next)=>{
+  res.send("falta aqui ver que onda")
+})
+
+router.get("/iniciar/:id" ,async (req,res,next)=>{
+  
+  let today = new Date()
+  try{
+    const idRitual = req.params.id
+    const idRitualDB = await Rituales.find({_id:idRitual})
+    // const acceder = idRitualDB[0]
+    const horaInit = await Record.create({dateInit:today})
+    
+    console.log(acceder)
+    let hora = formatAMPM(horaInit.dateInit)
+    console.log(hora)
+    // res.render("rituales/iniciar-ritual",{acceder,hora})
+  }catch(error){
+    console.log(error)
+  }
+//solo puuedes enviar una vez la hora
+  
+})
 
 
 

@@ -12,7 +12,7 @@
     <form class="mt-8 space-y-6" action="/signup" method="POST">
     <div id="parte1" class="block">
     {{#each this.rituales}}
-        <div class="p-4  bg-white rounded-xl shadow-md">
+        <div class="p-4 mt-1 bg-white rounded-xl shadow-md">
           <label class="flex items-center space-x-3">
           <input type="checkbox" value={{this.nombreRitual}} name="interes" class=" h-6 w-6 border border-gray-300 rounded-md checked:bg-blue-600 checked:border-transparent focus:outline-none">
           <span class="text-gray-900 font-medium">{{this.nombreRitual}}</span>

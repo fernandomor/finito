@@ -23,7 +23,8 @@ const app_name = require('./package.json').name;
 const debug = require('debug')(`${app_name}:${path.basename(__filename).split('.')[0]}`);
 
 const app = express();
-require('./config/session.config')(app);
+require('./config/session.config')(app)
+// require('./config/db.config')
 
 // Middleware Setup
 app.use(logger('dev'));
