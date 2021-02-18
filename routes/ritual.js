@@ -74,6 +74,7 @@ router.get("/daily" , async (req,res,next)=>{
   }else{ 
     res.render("rituales/retos-diarios",{name,arrayFiltrado})
   }
+  //Tambien falta agregar nuevos rituales 
   //si el arrayFiltrado esta vacio poner que es dia de descanso 
 })
 
@@ -121,10 +122,10 @@ router.get("/iniciar/:id" ,async (req,res,next)=>{
     const dateInit = e.record
     dateInit.forEach(ed=>{
       if(diaDelAno(ed.dateInit)===diaQueQuieroPublicar){
-        deTiDepende.push(false)
+        deTiDepende = false
         loQuePublicoHoy.push(ed)
       }else{
-        deTiDepende.push(true)
+        deTiDepende = true
       }
     })
   })
@@ -138,19 +139,43 @@ router.get("/iniciar/:id" ,async (req,res,next)=>{
     console.log("se publico :", "la horaInit",horaInit,"la idRitualDB",idRitualDB,"la hora",hora)
     res.render("rituales/iniciar-ritual",{idRitualDB,hora})
   }else{
-    const idRitualDB = await Rituales.find({_id:idRitual})
+    const mientras = await Rituales.find({_id:idRitual})
+    const {ritualName,numMax,numActual,_id} = mientras[0]
     let hora = formatAMPM(loQuePublicoHoy[0].dateInit)
-    console.log("aun no",idRitualDB,hora)
-    res.render("rituales/iniciar-ritual",{idRitualDB,hora})
+    console.log("aun no",hora,ritualName,numMax,numActual)
+    res.render("rituales/iniciar-ritual",{_id,ritualName,numMax,numActual,hora})
   }
     
     
     
-  //se puede optimizar si desde el principio traes de la base de datos la informacióon y guardas unicamente los que pertenezcan al dia de hoy , creo 
+//se puede optimizar si desde el principio traes de la base de datos la informacióon y guardas unicamente los que pertenezcan al dia de hoy , creo 
 //solo puuedes enviar una vez la hora de inicio al día
   
 })
 
+router.post("/finalizar/:id", async (req,res,next)=>{
+  let today = new Date()
+  const id = req.params.id
+  const ritual = await Rituales.find({_id:id}).populate("record")
+  const hoy = diaDelAno(today)
+  console.log(hoy)
+  // console.log(hoy)
+  const verSiPublica = ritual.forEach( e=> {
+    const dateInit = e.record
+    dateInit.forEach(async ed=>{
+      console.log(ed)
+      if(diaDelAno(ed.dateInit)===hoy){
+         const updateDateFinit = await Record.findByIdAndUpdate(ed._id,{dateFinal:today ,dateInit:ed.dateInit},{ new: true })
+         const horaFinal = formatAMPM(today)
+         const hora = formatAMPM(ed.dateInit)
+         const {ritualName,numMax,numActual,_id} = ritual[0]
+         console.log("asi sale la hora final",horaFinal)
+        res.render("rituales/iniciar-ritual",{horaFinal,hora,ritualName,numMax,numActual,_id})
+      }
+    })
+  })
 
+  //si terminas en otro día habra problemas - tienes que iniciar y finalizar el mismo dia , creo 
+})
 
 module.exports = router;

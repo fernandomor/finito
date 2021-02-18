@@ -3,16 +3,26 @@
   <div>
     <div class="text-xl font-medium text-black">{{ritualName}}</div>
     <p class="text-gray-500">Hora de inicio <b>{{hora}}</b> </p>
+    <p class="text-gray-500">Hora de termino <b>
+      {{#if horaFinal}}
+        {{horaFinal}}
+      {{/if}}
+      {{#unless horaFinal}}
+        : -
+      {{/unless}}
+      </b></p>
     <p class="text-gray-500">Nivel actual: <b>{{numActual}}</b></p>
     <p class="text-gray-500">Meta: <b>{{numMax}}</b></p>
   </div>
-
-  <a class="flex justify-center" href="/finalizar">
-    <div class="items-center	">
+      {{#unless horaFinal}}
+        <form action="/finalizar/{{_id}}" method="POST">
+    <button>
       <div class=" p-4  w-40 h-30 bg-red-500 rounded-full shadow-md flex items-center">
       <p class="pl-4 text-white font-bold text-2xl">Finalizar</p>
     </div>
-  </a>
+    </button>
+  </form>
+      {{/unless}}
 </div>
 
 
