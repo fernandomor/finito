@@ -14,6 +14,14 @@ function formatAMPM(d) {
     return hours+':'+minutes+ampm;
 }
 
+function diaDelAno(fecha){
+  let now = fecha
+  let start = new Date(now.getFullYear(), 0, 0);
+  let diff = now - start;
+  let oneDay = 1000 * 60 * 60 * 24;
+  let day = Math.floor(diff / oneDay);
+  return day
+}
 
 
 router.get("/select-rituals" , async (req,res,next)=>{
@@ -101,22 +109,45 @@ router.get("/editar/:id" ,(req,res,next)=>{
 })
 
 router.get("/iniciar/:id" ,async (req,res,next)=>{
-  
   let today = new Date()
-  try{
-    const idRitual = req.params.id
-    const idRitualDB = await Rituales.find({_id:idRitual})
-    // const acceder = idRitualDB[0]
+  const idRitual = req.params.id
+  const obtenerRelacion = await Rituales.find({_id:idRitual}).populate("record")
+  const recordsDelRitual = await obtenerRelacion[0].record
+  const diaQueQuieroPublicar = diaDelAno(today)
+  const loQuePublicoHoy = []
+  const yFueALas = 0
+  let deTiDepende = []
+  const verSiPublica = obtenerRelacion.forEach(e=>{
+    const dateInit = e.record
+    dateInit.forEach(ed=>{
+      if(diaDelAno(ed.dateInit)===diaQueQuieroPublicar){
+        deTiDepende.push(false)
+        loQuePublicoHoy.push(ed)
+      }else{
+        deTiDepende.push(true)
+      }
+    })
+  })
+  console.log(deTiDepende)
+
+  if(!recordsDelRitual[0]||deTiDepende[0]){
+    console.log("esta vacio y la consolola lo sabe")
     const horaInit = await Record.create({dateInit:today})
-    
-    console.log(acceder)
+    const idRitualDB = await Rituales.findByIdAndUpdate(idRitual,{$push : {record:horaInit}})
     let hora = formatAMPM(horaInit.dateInit)
-    console.log(hora)
-    // res.render("rituales/iniciar-ritual",{acceder,hora})
-  }catch(error){
-    console.log(error)
+    console.log("se publico :", "la horaInit",horaInit,"la idRitualDB",idRitualDB,"la hora",hora)
+    res.render("rituales/iniciar-ritual",{idRitualDB,hora})
+  }else{
+    const idRitualDB = await Rituales.find({_id:idRitual})
+    let hora = formatAMPM(loQuePublicoHoy[0].dateInit)
+    console.log("aun no",idRitualDB,hora)
+    res.render("rituales/iniciar-ritual",{idRitualDB,hora})
   }
-//solo puuedes enviar una vez la hora
+    
+    
+    
+  //se puede optimizar si desde el principio traes de la base de datos la informacióon y guardas unicamente los que pertenezcan al dia de hoy , creo 
+//solo puuedes enviar una vez la hora de inicio al día
   
 })
 
