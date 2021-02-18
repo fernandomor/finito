@@ -3,11 +3,11 @@ const router  = express.Router();
 const User = require('../models/User.model.js')
 const Rituales = require('../models/Rituales.model.js')
 const Record = require('../models/Record.model.js')
-const InitRitu = require('../models/Init.model.js')
+const InitRitu = require('../models/Init.model.js');
+const { format } = require('morgan');
 const dias = ["Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"]
 
 function formatAMPM(d) {
-
     minutes = d.getMinutes().toString().length == 1 ? '0'+d.getMinutes() : d.getMinutes(),
     hours = d.getHours().toString().length == 1 ? '0'+d.getHours() : d.getHours(),
     ampm = d.getHours() >= 12 ? 'pm' : 'am'    
@@ -165,6 +165,8 @@ router.post("/finalizar/:id", async (req,res,next)=>{
     dateInit.forEach(async ed=>{
       console.log(ed)
       if(diaDelAno(ed.dateInit)===hoy){
+
+        // quiitar el if del dia - y cambiarlo por un if si hay dato en dateInit y dateFinal
          const updateDateFinit = await Record.findByIdAndUpdate(ed._id,{dateFinal:today ,dateInit:ed.dateInit},{ new: true })
          const horaFinal = formatAMPM(today)
          const hora = formatAMPM(ed.dateInit)
@@ -174,8 +176,53 @@ router.post("/finalizar/:id", async (req,res,next)=>{
       }
     })
   })
-
-  //si terminas en otro día habra problemas - tienes que iniciar y finalizar el mismo dia , creo 
 })
+
+//hacer dashbpard de hora final menos inicial - despues cambiar el condicional de finalizar - cambiar diseño - agregar lo de frases para ahi tener el crud completo o poner en agregar o editar los rituales pero me da miedo el checkbox
+
+router.get("/dashboard", async(req,res,next)=>{
+  if(req.session.currentUser){
+    const {_id,rituales} = req.session.currentUser
+    let tiempoTotal = 0
+    const ritualesPopulados = await User.find({_id}).populate({
+      path:"rituales",
+      populate:{
+        path :"record",
+        model : "record"
+      }
+    })
+
+    const userrituales = ritualesPopulados[0].rituales
+    const nuevoArr = []
+
+    for(let i =0;i<userrituales.length;i++){
+      userrituales[i].record[0].tiempoUsado = userrituales[i].record[0].dateFinal - userrituales[i].record[0].dateInit
+
+
+      console.log("uno",userrituales[i])
+      
+    }
+    console.log("dos",userrituales[0])
+    
+   
+    
+    
+    
+    res.render("rituales/dashboard-finito",{userrituales})
+  }else{
+    res.redirect("/login")
+  }
+
+
+  //los rituales correspondientes al usuario , osea al usuario
+  //traer los finalizados de la DB que contengan dateInit y dateFinal
+
+  //restar fecha uno y fecha dos 
+  //enviar los datos a la vista 
+
+
+
+})
+
 
 module.exports = router;

@@ -1,1 +1,42 @@
-<p>El dashboard</p>
+<div class="py-4 px-8 max-w-md mx-auto space-y-0 ">
+<h1 class="text-3xl font-extrabold text-gray-900">Hola {{name}}</h1>
+<p class="mt-1 text-lg text-gray-500">Aqui podemos ver tu progreso del día</p>
+</div>
+{{!-- <script>
+
+  function formatAMPM(d) {
+
+    minutes = d.getMinutes().toString().length == 1 ? '0'+d.getMinutes() : d.getMinutes(),
+    hours = d.getHours().toString().length == 1 ? '0'+d.getHours() : d.getHours(),
+    ampm = d.getHours() >= 12 ? 'pm' : 'am'    
+    return hours+':'+minutes+ampm;
+}
+
+
+  {{#each this.record}}
+      const horaInit = formatAMPM({{this.dateInit}})
+      console.log(horaInit)
+  {{/each}}
+
+</script> --}}
+
+
+{{#each userrituales}}
+<div class="mt-5 py-4 px-8 max-w-sm mx-auto bg-white rounded-xl shadow-md flex space-y-0 space-x-6">
+  <div class="text-left space-y-2 sm:text-left">
+    <div class="space-y-0.5">
+      <p class="text-lg text-black font-bold">
+        {{ritualName}}
+      </p>
+      {{#each record}}
+      <p><b>Fecha inicial</b> {{dateInit}}</p>
+      <p><b>Fecha final</b>   {{dateFinal}}</p>
+      {{/each}}
+      <p><b>Meta final</b> : {{numMax}}</p>
+      <p><b>Meta de hoy</b> : {{numActual}}</p>
+      <p><b>Tiempo usado :</b></p>
+    </div>
+  </div>
+</div>
+{{/each}}
+
