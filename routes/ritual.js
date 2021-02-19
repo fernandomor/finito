@@ -165,7 +165,7 @@ router.post("/finalizar/:id", async (req,res,next)=>{
     const dateInit = e.record
     dateInit.forEach(async ed=>{
       console.log(ed)
-      if(diaDelAno(ed.dateInit)===hoy){
+      
 
         // quiitar el if del dia - y cambiarlo por un if si hay dato en dateInit y dateFinal
          const updateDateFinit = await Record.findByIdAndUpdate(ed._id,{dateFinal:today ,dateInit:ed.dateInit},{ new: true })
@@ -174,7 +174,7 @@ router.post("/finalizar/:id", async (req,res,next)=>{
          const {ritualName,numMax,numActual,_id} = ritual[0]
          console.log("asi sale la hora final",horaFinal)
         res.render("rituales/iniciar-ritual",{horaFinal,hora,ritualName,numMax,numActual,_id})
-      }
+      
     })
   })
 })

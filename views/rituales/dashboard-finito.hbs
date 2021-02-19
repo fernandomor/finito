@@ -2,23 +2,6 @@
 <h1 class="text-3xl font-extrabold text-gray-900">Hola {{name}}</h1>
 <p class="mt-1 text-lg text-gray-500">Aqui podemos ver tu progreso del día</p>
 </div>
-{{!-- <script>
-
-  function formatAMPM(d) {
-
-    minutes = d.getMinutes().toString().length == 1 ? '0'+d.getMinutes() : d.getMinutes(),
-    hours = d.getHours().toString().length == 1 ? '0'+d.getHours() : d.getHours(),
-    ampm = d.getHours() >= 12 ? 'pm' : 'am'    
-    return hours+':'+minutes+ampm;
-}
-
-
-  {{#each this.record}}
-      const horaInit = formatAMPM({{this.dateInit}})
-      console.log(horaInit)
-  {{/each}}
-
-</script> --}}
 
 
 {{#each userrituales}}
@@ -40,3 +23,6 @@
 </div>
 {{/each}}
 
+<div class="flex">
+<a class="mt-5 py-4 px-8  mx-auto text-sm font-medium rounded-md text-white bg-black hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500" href="/daily">Ver retos del día</a>
+</div>

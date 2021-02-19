@@ -9,7 +9,6 @@ const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
 
-
 // mongoose
 //   .connect('mongodb://localhost/finito', {useNewUrlParser: true})
 //   .then(x => {
@@ -61,5 +60,8 @@ app.use('/', user);
 
 const ritual = require('./routes/ritual');
 app.use('/', ritual);
+
+const frases = require('./routes/frases');
+app.use('/', frases);
 
 module.exports = app;
