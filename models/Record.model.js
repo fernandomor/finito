@@ -7,6 +7,9 @@ const recordSchema = new Schema({
   },
   dateFinal:{
     type : Date,
+  },
+  tiempoUsado:{
+    type:String,
   }
 })
 

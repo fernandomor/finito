@@ -4,7 +4,6 @@ const User = require('../models/User.model.js')
 const Rituales = require('../models/Rituales.model.js')
 const Record = require('../models/Record.model.js')
 const InitRitu = require('../models/Init.model.js');
-const { format } = require('morgan');
 const FrasesModel = require('../models/Frases.model.js');
 const dias = ["Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"]
 
@@ -23,6 +22,26 @@ function diaDelAno(fecha){
   let oneDay = 1000 * 60 * 60 * 24;
   let day = Math.floor(diff / oneDay);
   return day
+}
+
+function msConversion(millis) {
+  let sec = Math.floor(millis / 1000);
+  let hrs = Math.floor(sec / 3600);
+  sec -= hrs * 3600;
+  let min = Math.floor(sec / 60);
+  sec -= min * 60;
+
+  sec = '' + sec;
+  sec = ('00' + sec).substring(sec.length);
+
+  if (hrs > 0) {
+    min = '' + min;
+    min = ('00' + min).substring(min.length);
+    return hrs + ":" + min + ":" + sec + " horas";
+  }
+  else {
+    return min + ":" + sec + " minutos";
+  }
 }
 
 
@@ -171,11 +190,14 @@ router.post("/finalizar/:id", async (req,res,next)=>{
   const verSiPublica = ritual.forEach( e=> {
     const dateInit = e.record
     dateInit.forEach(async ed=>{
-      console.log(ed)
       
+      const resta = today-ed.dateInit
+      const tiempomin = msConversion(resta)
+      console.log("por alguna razon estoy dentro del ciclo",ed)
 
         // quiitar el if del dia - y cambiarlo por un if si hay dato en dateInit y dateFinal
-         const updateDateFinit = await Record.findByIdAndUpdate(ed._id,{dateFinal:today ,dateInit:ed.dateInit},{ new: true })
+         const updateDateFinit = await Record.findByIdAndUpdate(ed._id,{dateFinal:today ,dateInit:ed.dateInit , tiempoUsado:tiempomin},{ new: true })
+         console.log(updateDateFinit)
          const horaFinal = formatAMPM(today)
          const hora = formatAMPM(ed.dateInit)
          const {ritualName,numMax,numActual,_id} = ritual[0]
