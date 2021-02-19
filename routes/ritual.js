@@ -27,7 +27,7 @@ function diaDelAno(fecha){
 
 
 router.get("/select-rituals" , async (req,res,next)=>{
-  const {interes , _id} = req.session.currentUser
+  const {interes , _id} = await req.session.currentUser
   const ritualesSelect = await InitRitu.find({nombreRitual:{ $in : interes}})
   const validacion = await User.find({_id})
   console.log(validacion)
@@ -127,6 +127,7 @@ router.get("/iniciar/:id" ,async (req,res,next)=>{
   let deTiDepende = []
   const verSiPublica = obtenerRelacion.forEach(e=>{
     const dateInit = e.record
+    console.log(dateInit)
     dateInit.forEach(ed=>{
       if(diaDelAno(ed.dateInit)===diaQueQuieroPublicar){
         deTiDepende = false
@@ -136,7 +137,7 @@ router.get("/iniciar/:id" ,async (req,res,next)=>{
       }
     })
   })
-  console.log(deTiDepende)
+
 
   if(!recordsDelRitual[0]||deTiDepende[0]){
     console.log("esta vacio y la consolola lo sabe")
@@ -179,7 +180,7 @@ router.post("/finalizar/:id", async (req,res,next)=>{
          const hora = formatAMPM(ed.dateInit)
          const {ritualName,numMax,numActual,_id} = ritual[0]
          console.log("asi sale la hora final",horaFinal)
-        res.render("rituales/iniciar-ritual",{horaFinal,hora,ritualName,numMax,numActual,_id})
+          res.render("rituales/iniciar-ritual",{horaFinal,hora,ritualName,numMax,numActual,_id})
       
     })
   })
