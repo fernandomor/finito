@@ -194,17 +194,18 @@ router.get("/dashboard", async(req,res,next)=>{
     })
 
     const userrituales = ritualesPopulados[0].rituales
-    const arrayEntendible = userrituales.forEach(e=>{
-      cosnt
-        e.record.forEach(ele=>{
-        console.log(ele)
-      })
-      console.log(e)
-    })
+    // const arrayEntendible = userrituales.forEach(e=>{
+    //     const ArrUpper = []
+    //     e.record.forEach(ele=>{
+    //     const ArrDeeper = []
+    //     console.log("en el mas deep",ele)
+    //   })
+    //   console.log("en el primero",e)
+    // })
     
     
-    console.log(arrayEntendible ,tiempoTotal)
-    res.render("rituales/dashboard-finito")
+    console.log(userrituales)
+    res.render("rituales/dashboard-finito",{userrituales})
   }else{
     res.redirect("/login")
   }
@@ -214,7 +215,7 @@ router.get("/dashboard", async(req,res,next)=>{
   //traer los finalizados de la DB que contengan dateInit y dateFinal
 
   //restar fecha uno y fecha dos 
-  //enviar los datos a la vista 
+  //enviar los datos a la vista git
 
 
 
