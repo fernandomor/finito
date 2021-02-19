@@ -41,8 +41,9 @@ router.get("/borrar/:id", async (req,res,next)=>{
 router.get("/frase/:id", async (req,res,next)=>{
   const id = req.params.id
   if(req.session.currentUser){
-    await Frases.findByIdAndRemove(id)
-    res.render("/comunidad")
+    const fraseDb = await Frases.find({_id:id})
+    const frase = fraseDb[0]
+    res.render("frases/editar", frase)
   }else{
     res.redirect("/login")
   }
@@ -50,12 +51,11 @@ router.get("/frase/:id", async (req,res,next)=>{
 
 router.post("/frase/:id", async (req,res,next)=>{
   const id = req.params.id
-  if(req.session.currentUser){
-    await Frases.findByIdAndRemove(id)
-    res.render("/comunidad")
-  }else{
-    res.redirect("/login")
-  }
+  const fraseup = req.body.frase
+  const newFrase = await Frases.findByIdAndUpdate(id,{frase:fraseup})
+  console.log(newFrase)
+  res.redirect("/comunidad")
+
 })
 
 module.exports = router;
