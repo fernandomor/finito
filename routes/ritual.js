@@ -5,6 +5,7 @@ const Rituales = require('../models/Rituales.model.js')
 const Record = require('../models/Record.model.js')
 const InitRitu = require('../models/Init.model.js');
 const { format } = require('morgan');
+const FrasesModel = require('../models/Frases.model.js');
 const dias = ["Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"]
 
 function formatAMPM(d) {
@@ -57,6 +58,11 @@ router.post("/select-rituals" , async (req,res,next)=>{
 router.get("/daily" , async (req,res,next)=>{
   let today = new Date()
   let indiceDia = today.getDay()
+  const frasesDB = await FrasesModel.find({})
+  let tamanoArr = frasesDB.length
+  const numRan = Math.floor(Math.random()*tamanoArr)
+  const rndFrase = frasesDB[numRan]
+  
   
   const {name , email} = req.session.currentUser
   console.log("en daily",req.session.currentUser)
@@ -73,7 +79,7 @@ router.get("/daily" , async (req,res,next)=>{
   if(!req.session.currentUser){
     res.redirect("/login")
   }else{ 
-    res.render("rituales/retos-diarios",{name,arrayFiltrado})
+    res.render("rituales/retos-diarios",{name,arrayFiltrado,rndFrase})
   }
   //Tambien falta agregar nuevos rituales 
   //si el arrayFiltrado esta vacio poner que es dia de descanso 

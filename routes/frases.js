@@ -52,7 +52,7 @@ router.get("/frase/:id", async (req,res,next)=>{
 router.post("/frase/:id", async (req,res,next)=>{
   const id = req.params.id
   const fraseup = req.body.frase
-  const newFrase = await Frases.findByIdAndUpdate(id,{frase:fraseup})
+  const newFrase = await Frases.findByIdAndUpdate(id, {frase:fraseup }, { new: true })
   console.log(newFrase)
   res.redirect("/comunidad")
 
