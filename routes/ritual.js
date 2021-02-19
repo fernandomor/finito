@@ -4,10 +4,11 @@ const User = require('../models/User.model.js')
 const Rituales = require('../models/Rituales.model.js')
 const Record = require('../models/Record.model.js')
 const InitRitu = require('../models/Init.model.js');
-
+const { format } = require('morgan');
 const dias = ["Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"]
 
 function formatAMPM(d) {
+
     minutes = d.getMinutes().toString().length == 1 ? '0'+d.getMinutes() : d.getMinutes(),
     hours = d.getHours().toString().length == 1 ? '0'+d.getHours() : d.getHours(),
     ampm = d.getHours() >= 12 ? 'pm' : 'am'    
@@ -193,22 +194,17 @@ router.get("/dashboard", async(req,res,next)=>{
     })
 
     const userrituales = ritualesPopulados[0].rituales
-    const nuevoArr = []
-
-    for(let i =0;i<userrituales.length;i++){
-      userrituales[i].record[0].tiempoUsado = userrituales[i].record[0].dateFinal - userrituales[i].record[0].dateInit
-
-
-      console.log("uno",userrituales[i])
-      
-    }
-    console.log("dos",userrituales[0])
-    
-   
+    const arrayEntendible = userrituales.forEach(e=>{
+      cosnt
+        e.record.forEach(ele=>{
+        console.log(ele)
+      })
+      console.log(e)
+    })
     
     
-    
-    res.render("rituales/dashboard-finito",{userrituales})
+    console.log(arrayEntendible ,tiempoTotal)
+    res.render("rituales/dashboard-finito")
   }else{
     res.redirect("/login")
   }
