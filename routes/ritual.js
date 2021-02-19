@@ -4,7 +4,7 @@ const User = require('../models/User.model.js')
 const Rituales = require('../models/Rituales.model.js')
 const Record = require('../models/Record.model.js')
 const InitRitu = require('../models/Init.model.js');
-const { format } = require('morgan');
+
 const dias = ["Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"]
 
 function formatAMPM(d) {
